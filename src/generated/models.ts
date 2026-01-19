@@ -10,4 +10,5 @@
  */
 export type * from './models/Member'
 export type * from './models/AttendanceTimestamp'
+export type * from './models/TableStatus'
 export type * from './commonInputTypes'

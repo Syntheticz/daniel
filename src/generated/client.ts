@@ -49,3 +49,8 @@ export type Member = Prisma.MemberModel
  * 
  */
 export type AttendanceTimestamp = Prisma.AttendanceTimestampModel
+/**
+ * Model TableStatus
+ * 
+ */
+export type TableStatus = Prisma.TableStatusModel

@@ -6,8 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchMembers, finalizeAttendance } from "@/lib/action";
+import {
+  fetchMembers,
+  finalizeAttendance,
+  resetTable,
+  updateTable,
+} from "@/lib/action";
 import { Spinner } from "@/components/ui/spinner";
+import { AddMemberDialog } from "./add-member-dialog";
 
 interface Attendee {
   id: string;
@@ -36,13 +42,13 @@ function loadRecords(): Map<string, AttendanceRecord> {
 function saveRecords(records: Map<string, AttendanceRecord>) {
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify(Array.from(records.entries()))
+    JSON.stringify(Array.from(records.entries())),
   );
 }
 
 function generateSpreadsheet(
   attendees: Attendee[],
-  records: Map<string, AttendanceRecord>
+  records: Map<string, AttendanceRecord>,
 ) {
   const headers = ["Name", "Status", "Date", "Time"];
   const rows = attendees.map((attendee) => {
@@ -73,13 +79,15 @@ export default function AttendanceSystem() {
     Map<string, AttendanceRecord>
   >(new Map());
   const [customTimes, setCustomTimes] = useState<Map<string, string>>(
-    new Map()
+    new Map(),
   );
   const [isLoaded, setIsLoaded] = useState(false);
 
   const { data: members = [], isLoading } = useQuery({
     queryKey: ["members"],
     queryFn: fetchMembers,
+    refetchInterval: 5000,
+    refetchIntervalInBackground: false,
   });
 
   const { mutate: finalize } = useMutation({
@@ -87,16 +95,35 @@ export default function AttendanceSystem() {
   });
 
   const attendees: Attendee[] = useMemo(() => {
-    return members.map((member) => ({
-      id: member.id,
-      name: `${member.firstName} ${member.lastName}`,
-    }));
+    return members
+      .slice()
+      .sort((a, b) => a.lastName.localeCompare(b.lastName))
+      .map((member) => ({
+        id: member.id,
+        name: `${member.lastName}, ${member.firstName}`,
+      }));
   }, [members]);
 
   useEffect(() => {
-    setSubmittedRecords(loadRecords());
+    if (!members.length) return;
+
+    setSubmittedRecords((prev) => {
+      const newMap = new Map(prev);
+
+      for (const member of members) {
+        if (member.status.status === "PRESENT") {
+          newMap.set(member.id, {
+            id: member.id,
+            submittedAt: member.status.timestamp?.toISOString() || "",
+          });
+        }
+      }
+
+      return newMap;
+    });
+
     setIsLoaded(true);
-  }, []);
+  }, [members]);
 
   useEffect(() => {
     if (isLoaded) {
@@ -143,31 +170,49 @@ export default function AttendanceSystem() {
       };
     });
 
-    console.log(finalized);
     finalize(finalized);
     alert("Attendance Finalized");
     handleDownloadSpreadsheet();
     handleReset();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const now = new Date();
+    const updates: { id: string; submittedAt: string }[] = [];
+
+    for (const id of selectedIds) {
+      const customTime = customTimes.get(id);
+
+      let submittedAt = now;
+
+      if (customTime) {
+        const [hours, minutes] = customTime.split(":").map(Number);
+        submittedAt = new Date();
+        submittedAt.setHours(hours, minutes, 0, 0);
+      }
+
+      // ✅ async call OUTSIDE setState
+      await updateTable(id, submittedAt.toISOString());
+
+      updates.push({
+        id,
+        submittedAt: submittedAt.toISOString(),
+      });
+    }
+
+    // ✅ synchronous state update
     setSubmittedRecords((prev) => {
       const newMap = new Map(prev);
-      selectedIds.forEach((id) => {
-        if (!newMap.has(id)) {
-          const customTime = customTimes.get(id);
-          let submittedAt = now;
-          if (customTime) {
-            const [hours, minutes] = customTime.split(":").map(Number);
-            submittedAt = new Date();
-            submittedAt.setHours(hours, minutes, 0, 0);
-          }
-          newMap.set(id, { id, submittedAt: submittedAt.toISOString() });
+
+      for (const record of updates) {
+        if (!newMap.has(record.id)) {
+          newMap.set(record.id, record);
         }
-      });
+      }
+
       return newMap;
     });
+
     setSelectedIds(new Set());
   };
 
@@ -175,7 +220,8 @@ export default function AttendanceSystem() {
     generateSpreadsheet(attendees, submittedRecords);
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
+    await resetTable();
     setSelectedIds(new Set());
     setSubmittedRecords(new Map());
     setCustomTimes(new Map());
@@ -185,8 +231,8 @@ export default function AttendanceSystem() {
 
   if (!isLoaded) {
     return (
-      <div className="flex h-[100dvh] items-center justify-center">
-        Loading...
+      <div className="w-full h-screen flex justify-center items-center">
+        <Spinner className="size-16" />
       </div>
     );
   }
@@ -294,6 +340,7 @@ export default function AttendanceSystem() {
             <Download className="mr-2 h-4 w-4" />
             Spreadsheet
           </Button>
+          <AddMemberDialog />
         </div>
         <Button
           onClick={handleFinalizeAttendance}

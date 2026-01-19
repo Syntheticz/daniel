@@ -17,24 +17,35 @@ const [headerLine, ...lines] = file.split("\n");
 const headers = headerLine.split(",");
 const data = lines.map((line) => {
   const values = line.split(",");
-  return headers.reduce((obj, key, index) => {
-    obj[key.trim()] = values[index]?.trim();
-    return obj;
-  }, {} as Record<string, string>);
+  return headers.reduce(
+    (obj, key, index) => {
+      obj[key.trim()] = values[index]?.trim();
+      return obj;
+    },
+    {} as Record<string, string>,
+  );
 });
 
 async function main() {
-  const membersToInsert = data.map((member) => ({
-    firstName: member.firstname,
-    lastName: member.lastname,
-    absent: 0,
-    late: 0,
-    present: 0,
-  }));
+  await prisma.$transaction(async (tx) => {
+    for (const member of data) {
+      const status = await tx.tableStatus.create({
+        data: {
+          status: "ABSENT",
+        },
+      });
 
-  await prisma.member.createMany({
-    data: membersToInsert,
-    skipDuplicates: true, // avoids duplicates based on unique constraint
+      await tx.member.create({
+        data: {
+          firstName: member.firstname,
+          lastName: member.lastname,
+          absent: 0,
+          late: 0,
+          present: 0,
+          statusId: status.id,
+        },
+      });
+    }
   });
   console.log("Done!");
 }

@@ -6,6 +6,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
 });
+
 const prisma = new PrismaClient({
   adapter,
 });
@@ -50,9 +51,61 @@ function getAttendanceStatus(submittedAt?: string | null): AttendanceStatus {
   return date > cutoff ? "Late" : "Present";
 }
 
+//ACTIONS
 export async function fetchMembers() {
-  const members = await prisma.member.findMany({});
+  const members = await prisma.member.findMany({
+    include: {
+      status: true,
+    },
+  });
   return members;
+}
+
+export async function createMember(member: {
+  firstName: string;
+  lastName: string;
+}) {
+  const status = await prisma.tableStatus.create({
+    data: {
+      status: "ABSENT",
+    },
+  });
+
+  await prisma.member.create({
+    data: {
+      firstName: member.firstName,
+      lastName: member.lastName,
+      absent: 0,
+      late: 0,
+      present: 0,
+      statusId: status.id,
+    },
+  });
+}
+
+export async function resetTable() {
+  await prisma.tableStatus.updateMany({
+    data: {
+      status: "ABSENT",
+      timestamp: null,
+    },
+  });
+}
+
+export async function updateTable(id: string, timestamp: string) {
+  const tableStatus = await prisma.tableStatus.findFirstOrThrow({
+    where: {
+      members: { id },
+    },
+  });
+
+  await prisma.tableStatus.update({
+    where: { id: tableStatus.id },
+    data: {
+      status: "PRESENT",
+      timestamp: timestamp,
+    },
+  });
 }
 
 export async function finalizeAttendance(
@@ -61,7 +114,7 @@ export async function finalizeAttendance(
     name: string;
     status: string;
     submittedAt: string | null;
-  }[]
+  }[],
 ) {
   for (const member of data) {
     if (member.submittedAt) {

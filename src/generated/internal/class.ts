@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Member {\n  id        String @id @default(cuid())\n  firstName String\n  lastName  String\n  present   Int\n  absent    Int\n  late      Int\n\n  timestamp AttendanceTimestamp[]\n}\n\nmodel AttendanceTimestamp {\n  id   String   @id @default(cuid())\n  date DateTime\n\n  member   Member? @relation(fields: [memberId], references: [id])\n  memberId String?\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Member {\n  id        String @id @default(cuid())\n  firstName String\n  lastName  String\n  present   Int\n  absent    Int\n  late      Int\n\n  timestamp AttendanceTimestamp[]\n\n  statusId String      @unique\n  status   TableStatus @relation(fields: [statusId], references: [id])\n\n  @@unique([firstName, lastName])\n}\n\nmodel AttendanceTimestamp {\n  id   String   @id @default(cuid())\n  date DateTime\n\n  member   Member? @relation(fields: [memberId], references: [id])\n  memberId String?\n}\n\nmodel TableStatus {\n  id        String    @id @default(cuid())\n  status    String    @default(\"ABSENT\")\n  timestamp DateTime?\n\n  members Member?\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Member\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"present\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"absent\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"late\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timestamp\",\"kind\":\"object\",\"type\":\"AttendanceTimestamp\",\"relationName\":\"AttendanceTimestampToMember\"}],\"dbName\":null},\"AttendanceTimestamp\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"member\",\"kind\":\"object\",\"type\":\"Member\",\"relationName\":\"AttendanceTimestampToMember\"},{\"name\":\"memberId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Member\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"present\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"absent\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"late\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timestamp\",\"kind\":\"object\",\"type\":\"AttendanceTimestamp\",\"relationName\":\"AttendanceTimestampToMember\"},{\"name\":\"statusId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"object\",\"type\":\"TableStatus\",\"relationName\":\"MemberToTableStatus\"}],\"dbName\":null},\"AttendanceTimestamp\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"member\",\"kind\":\"object\",\"type\":\"Member\",\"relationName\":\"AttendanceTimestampToMember\"},{\"name\":\"memberId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"TableStatus\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"members\",\"kind\":\"object\",\"type\":\"Member\",\"relationName\":\"MemberToTableStatus\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -193,6 +193,16 @@ export interface PrismaClient<
     * ```
     */
   get attendanceTimestamp(): Prisma.AttendanceTimestampDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.tableStatus`: Exposes CRUD operations for the **TableStatus** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TableStatuses
+    * const tableStatuses = await prisma.tableStatus.findMany()
+    * ```
+    */
+  get tableStatus(): Prisma.TableStatusDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

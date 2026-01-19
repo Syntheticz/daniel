@@ -45,6 +45,7 @@ export type MemberMinAggregateOutputType = {
   present: number | null
   absent: number | null
   late: number | null
+  statusId: string | null
 }
 
 export type MemberMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type MemberMaxAggregateOutputType = {
   present: number | null
   absent: number | null
   late: number | null
+  statusId: string | null
 }
 
 export type MemberCountAggregateOutputType = {
@@ -63,6 +65,7 @@ export type MemberCountAggregateOutputType = {
   present: number
   absent: number
   late: number
+  statusId: number
   _all: number
 }
 
@@ -86,6 +89,7 @@ export type MemberMinAggregateInputType = {
   present?: true
   absent?: true
   late?: true
+  statusId?: true
 }
 
 export type MemberMaxAggregateInputType = {
@@ -95,6 +99,7 @@ export type MemberMaxAggregateInputType = {
   present?: true
   absent?: true
   late?: true
+  statusId?: true
 }
 
 export type MemberCountAggregateInputType = {
@@ -104,6 +109,7 @@ export type MemberCountAggregateInputType = {
   present?: true
   absent?: true
   late?: true
+  statusId?: true
   _all?: true
 }
 
@@ -200,6 +206,7 @@ export type MemberGroupByOutputType = {
   present: number
   absent: number
   late: number
+  statusId: string
   _count: MemberCountAggregateOutputType | null
   _avg: MemberAvgAggregateOutputType | null
   _sum: MemberSumAggregateOutputType | null
@@ -232,7 +239,9 @@ export type MemberWhereInput = {
   present?: Prisma.IntFilter<"Member"> | number
   absent?: Prisma.IntFilter<"Member"> | number
   late?: Prisma.IntFilter<"Member"> | number
+  statusId?: Prisma.StringFilter<"Member"> | string
   timestamp?: Prisma.AttendanceTimestampListRelationFilter
+  status?: Prisma.XOR<Prisma.TableStatusScalarRelationFilter, Prisma.TableStatusWhereInput>
 }
 
 export type MemberOrderByWithRelationInput = {
@@ -242,11 +251,15 @@ export type MemberOrderByWithRelationInput = {
   present?: Prisma.SortOrder
   absent?: Prisma.SortOrder
   late?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   timestamp?: Prisma.AttendanceTimestampOrderByRelationAggregateInput
+  status?: Prisma.TableStatusOrderByWithRelationInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  statusId?: string
+  firstName_lastName?: Prisma.MemberFirstNameLastNameCompoundUniqueInput
   AND?: Prisma.MemberWhereInput | Prisma.MemberWhereInput[]
   OR?: Prisma.MemberWhereInput[]
   NOT?: Prisma.MemberWhereInput | Prisma.MemberWhereInput[]
@@ -256,7 +269,8 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   absent?: Prisma.IntFilter<"Member"> | number
   late?: Prisma.IntFilter<"Member"> | number
   timestamp?: Prisma.AttendanceTimestampListRelationFilter
-}, "id">
+  status?: Prisma.XOR<Prisma.TableStatusScalarRelationFilter, Prisma.TableStatusWhereInput>
+}, "id" | "statusId" | "firstName_lastName">
 
 export type MemberOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -265,6 +279,7 @@ export type MemberOrderByWithAggregationInput = {
   present?: Prisma.SortOrder
   absent?: Prisma.SortOrder
   late?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
   _avg?: Prisma.MemberAvgOrderByAggregateInput
   _max?: Prisma.MemberMaxOrderByAggregateInput
@@ -282,6 +297,7 @@ export type MemberScalarWhereWithAggregatesInput = {
   present?: Prisma.IntWithAggregatesFilter<"Member"> | number
   absent?: Prisma.IntWithAggregatesFilter<"Member"> | number
   late?: Prisma.IntWithAggregatesFilter<"Member"> | number
+  statusId?: Prisma.StringWithAggregatesFilter<"Member"> | string
 }
 
 export type MemberCreateInput = {
@@ -292,6 +308,7 @@ export type MemberCreateInput = {
   absent: number
   late: number
   timestamp?: Prisma.AttendanceTimestampCreateNestedManyWithoutMemberInput
+  status: Prisma.TableStatusCreateNestedOneWithoutMembersInput
 }
 
 export type MemberUncheckedCreateInput = {
@@ -301,6 +318,7 @@ export type MemberUncheckedCreateInput = {
   present: number
   absent: number
   late: number
+  statusId: string
   timestamp?: Prisma.AttendanceTimestampUncheckedCreateNestedManyWithoutMemberInput
 }
 
@@ -312,6 +330,7 @@ export type MemberUpdateInput = {
   absent?: Prisma.IntFieldUpdateOperationsInput | number
   late?: Prisma.IntFieldUpdateOperationsInput | number
   timestamp?: Prisma.AttendanceTimestampUpdateManyWithoutMemberNestedInput
+  status?: Prisma.TableStatusUpdateOneRequiredWithoutMembersNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
@@ -321,6 +340,7 @@ export type MemberUncheckedUpdateInput = {
   present?: Prisma.IntFieldUpdateOperationsInput | number
   absent?: Prisma.IntFieldUpdateOperationsInput | number
   late?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.AttendanceTimestampUncheckedUpdateManyWithoutMemberNestedInput
 }
 
@@ -331,6 +351,7 @@ export type MemberCreateManyInput = {
   present: number
   absent: number
   late: number
+  statusId: string
 }
 
 export type MemberUpdateManyMutationInput = {
@@ -349,6 +370,12 @@ export type MemberUncheckedUpdateManyInput = {
   present?: Prisma.IntFieldUpdateOperationsInput | number
   absent?: Prisma.IntFieldUpdateOperationsInput | number
   late?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type MemberFirstNameLastNameCompoundUniqueInput = {
+  firstName: string
+  lastName: string
 }
 
 export type MemberCountOrderByAggregateInput = {
@@ -358,6 +385,7 @@ export type MemberCountOrderByAggregateInput = {
   present?: Prisma.SortOrder
   absent?: Prisma.SortOrder
   late?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
 }
 
 export type MemberAvgOrderByAggregateInput = {
@@ -373,6 +401,7 @@ export type MemberMaxOrderByAggregateInput = {
   present?: Prisma.SortOrder
   absent?: Prisma.SortOrder
   late?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
 }
 
 export type MemberMinOrderByAggregateInput = {
@@ -382,6 +411,7 @@ export type MemberMinOrderByAggregateInput = {
   present?: Prisma.SortOrder
   absent?: Prisma.SortOrder
   late?: Prisma.SortOrder
+  statusId?: Prisma.SortOrder
 }
 
 export type MemberSumOrderByAggregateInput = {
@@ -423,6 +453,38 @@ export type MemberUpdateOneWithoutTimestampNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutTimestampInput, Prisma.MemberUpdateWithoutTimestampInput>, Prisma.MemberUncheckedUpdateWithoutTimestampInput>
 }
 
+export type MemberCreateNestedOneWithoutStatusInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutStatusInput, Prisma.MemberUncheckedCreateWithoutStatusInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutStatusInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUncheckedCreateNestedOneWithoutStatusInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutStatusInput, Prisma.MemberUncheckedCreateWithoutStatusInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutStatusInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneWithoutStatusNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutStatusInput, Prisma.MemberUncheckedCreateWithoutStatusInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutStatusInput
+  upsert?: Prisma.MemberUpsertWithoutStatusInput
+  disconnect?: Prisma.MemberWhereInput | boolean
+  delete?: Prisma.MemberWhereInput | boolean
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutStatusInput, Prisma.MemberUpdateWithoutStatusInput>, Prisma.MemberUncheckedUpdateWithoutStatusInput>
+}
+
+export type MemberUncheckedUpdateOneWithoutStatusNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutStatusInput, Prisma.MemberUncheckedCreateWithoutStatusInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutStatusInput
+  upsert?: Prisma.MemberUpsertWithoutStatusInput
+  disconnect?: Prisma.MemberWhereInput | boolean
+  delete?: Prisma.MemberWhereInput | boolean
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutStatusInput, Prisma.MemberUpdateWithoutStatusInput>, Prisma.MemberUncheckedUpdateWithoutStatusInput>
+}
+
 export type MemberCreateWithoutTimestampInput = {
   id?: string
   firstName: string
@@ -430,6 +492,7 @@ export type MemberCreateWithoutTimestampInput = {
   present: number
   absent: number
   late: number
+  status: Prisma.TableStatusCreateNestedOneWithoutMembersInput
 }
 
 export type MemberUncheckedCreateWithoutTimestampInput = {
@@ -439,6 +502,7 @@ export type MemberUncheckedCreateWithoutTimestampInput = {
   present: number
   absent: number
   late: number
+  statusId: string
 }
 
 export type MemberCreateOrConnectWithoutTimestampInput = {
@@ -464,6 +528,7 @@ export type MemberUpdateWithoutTimestampInput = {
   present?: Prisma.IntFieldUpdateOperationsInput | number
   absent?: Prisma.IntFieldUpdateOperationsInput | number
   late?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.TableStatusUpdateOneRequiredWithoutMembersNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutTimestampInput = {
@@ -473,6 +538,63 @@ export type MemberUncheckedUpdateWithoutTimestampInput = {
   present?: Prisma.IntFieldUpdateOperationsInput | number
   absent?: Prisma.IntFieldUpdateOperationsInput | number
   late?: Prisma.IntFieldUpdateOperationsInput | number
+  statusId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type MemberCreateWithoutStatusInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  present: number
+  absent: number
+  late: number
+  timestamp?: Prisma.AttendanceTimestampCreateNestedManyWithoutMemberInput
+}
+
+export type MemberUncheckedCreateWithoutStatusInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  present: number
+  absent: number
+  late: number
+  timestamp?: Prisma.AttendanceTimestampUncheckedCreateNestedManyWithoutMemberInput
+}
+
+export type MemberCreateOrConnectWithoutStatusInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutStatusInput, Prisma.MemberUncheckedCreateWithoutStatusInput>
+}
+
+export type MemberUpsertWithoutStatusInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutStatusInput, Prisma.MemberUncheckedUpdateWithoutStatusInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutStatusInput, Prisma.MemberUncheckedCreateWithoutStatusInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutStatusInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutStatusInput, Prisma.MemberUncheckedUpdateWithoutStatusInput>
+}
+
+export type MemberUpdateWithoutStatusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  present?: Prisma.IntFieldUpdateOperationsInput | number
+  absent?: Prisma.IntFieldUpdateOperationsInput | number
+  late?: Prisma.IntFieldUpdateOperationsInput | number
+  timestamp?: Prisma.AttendanceTimestampUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutStatusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  present?: Prisma.IntFieldUpdateOperationsInput | number
+  absent?: Prisma.IntFieldUpdateOperationsInput | number
+  late?: Prisma.IntFieldUpdateOperationsInput | number
+  timestamp?: Prisma.AttendanceTimestampUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 
@@ -513,7 +635,9 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   present?: boolean
   absent?: boolean
   late?: boolean
+  statusId?: boolean
   timestamp?: boolean | Prisma.Member$timestampArgs<ExtArgs>
+  status?: boolean | Prisma.TableStatusDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -524,6 +648,8 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   present?: boolean
   absent?: boolean
   late?: boolean
+  statusId?: boolean
+  status?: boolean | Prisma.TableStatusDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
 export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -533,6 +659,8 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   present?: boolean
   absent?: boolean
   late?: boolean
+  statusId?: boolean
+  status?: boolean | Prisma.TableStatusDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
 export type MemberSelectScalar = {
@@ -542,20 +670,27 @@ export type MemberSelectScalar = {
   present?: boolean
   absent?: boolean
   late?: boolean
+  statusId?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "present" | "absent" | "late", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "present" | "absent" | "late" | "statusId", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   timestamp?: boolean | Prisma.Member$timestampArgs<ExtArgs>
+  status?: boolean | Prisma.TableStatusDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type MemberIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  status?: boolean | Prisma.TableStatusDefaultArgs<ExtArgs>
+}
+export type MemberIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  status?: boolean | Prisma.TableStatusDefaultArgs<ExtArgs>
+}
 
 export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Member"
   objects: {
     timestamp: Prisma.$AttendanceTimestampPayload<ExtArgs>[]
+    status: Prisma.$TableStatusPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -564,6 +699,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     present: number
     absent: number
     late: number
+    statusId: string
   }, ExtArgs["result"]["member"]>
   composites: {}
 }
@@ -959,6 +1095,7 @@ readonly fields: MemberFieldRefs;
 export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   timestamp<T extends Prisma.Member$timestampArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$timestampArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceTimestampPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  status<T extends Prisma.TableStatusDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TableStatusDefaultArgs<ExtArgs>>): Prisma.Prisma__TableStatusClient<runtime.Types.Result.GetResult<Prisma.$TableStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -994,6 +1131,7 @@ export interface MemberFieldRefs {
   readonly present: Prisma.FieldRef<"Member", 'Int'>
   readonly absent: Prisma.FieldRef<"Member", 'Int'>
   readonly late: Prisma.FieldRef<"Member", 'Int'>
+  readonly statusId: Prisma.FieldRef<"Member", 'String'>
 }
     
 
@@ -1243,6 +1381,10 @@ export type MemberCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    */
   data: Prisma.MemberCreateManyInput | Prisma.MemberCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1313,6 +1455,10 @@ export type MemberUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many Members to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

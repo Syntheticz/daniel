@@ -23,6 +23,9 @@ model Member {
 
   timestamp AttendanceTimestamp[]
 
+  statusId String      @unique
+  status   TableStatus @relation(fields: [statusId], references: [id])
+
   @@unique([firstName, lastName])
 }
 
@@ -32,4 +35,12 @@ model AttendanceTimestamp {
 
   member   Member? @relation(fields: [memberId], references: [id])
   memberId String?
+}
+
+model TableStatus {
+  id        String    @id @default(cuid())
+  status    String    @default("ABSENT")
+  timestamp DateTime?
+
+  members Member?
 }

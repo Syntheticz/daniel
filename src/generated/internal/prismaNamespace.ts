@@ -385,7 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Member: 'Member',
-  AttendanceTimestamp: 'AttendanceTimestamp'
+  AttendanceTimestamp: 'AttendanceTimestamp',
+  TableStatus: 'TableStatus'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "member" | "attendanceTimestamp"
+    modelProps: "member" | "attendanceTimestamp" | "tableStatus"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -553,6 +554,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TableStatus: {
+      payload: Prisma.$TableStatusPayload<ExtArgs>
+      fields: Prisma.TableStatusFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TableStatusFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TableStatusFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>
+        }
+        findFirst: {
+          args: Prisma.TableStatusFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TableStatusFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>
+        }
+        findMany: {
+          args: Prisma.TableStatusFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>[]
+        }
+        create: {
+          args: Prisma.TableStatusCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>
+        }
+        createMany: {
+          args: Prisma.TableStatusCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TableStatusCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>[]
+        }
+        delete: {
+          args: Prisma.TableStatusDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>
+        }
+        update: {
+          args: Prisma.TableStatusUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>
+        }
+        deleteMany: {
+          args: Prisma.TableStatusDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TableStatusUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TableStatusUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>[]
+        }
+        upsert: {
+          args: Prisma.TableStatusUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TableStatusPayload>
+        }
+        aggregate: {
+          args: Prisma.TableStatusAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTableStatus>
+        }
+        groupBy: {
+          args: Prisma.TableStatusGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TableStatusGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TableStatusCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TableStatusCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -598,7 +673,8 @@ export const MemberScalarFieldEnum = {
   lastName: 'lastName',
   present: 'present',
   absent: 'absent',
-  late: 'late'
+  late: 'late',
+  statusId: 'statusId'
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -611,6 +687,15 @@ export const AttendanceTimestampScalarFieldEnum = {
 } as const
 
 export type AttendanceTimestampScalarFieldEnum = (typeof AttendanceTimestampScalarFieldEnum)[keyof typeof AttendanceTimestampScalarFieldEnum]
+
+
+export const TableStatusScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  timestamp: 'timestamp'
+} as const
+
+export type TableStatusScalarFieldEnum = (typeof TableStatusScalarFieldEnum)[keyof typeof TableStatusScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -795,6 +880,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   member?: Prisma.MemberOmit
   attendanceTimestamp?: Prisma.AttendanceTimestampOmit
+  tableStatus?: Prisma.TableStatusOmit
 }
 
 /* Types for Logging */

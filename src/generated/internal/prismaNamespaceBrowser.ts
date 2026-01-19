@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Member: 'Member',
-  AttendanceTimestamp: 'AttendanceTimestamp'
+  AttendanceTimestamp: 'AttendanceTimestamp',
+  TableStatus: 'TableStatus'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -77,7 +78,8 @@ export const MemberScalarFieldEnum = {
   lastName: 'lastName',
   present: 'present',
   absent: 'absent',
-  late: 'late'
+  late: 'late',
+  statusId: 'statusId'
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -90,6 +92,15 @@ export const AttendanceTimestampScalarFieldEnum = {
 } as const
 
 export type AttendanceTimestampScalarFieldEnum = (typeof AttendanceTimestampScalarFieldEnum)[keyof typeof AttendanceTimestampScalarFieldEnum]
+
+
+export const TableStatusScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  timestamp: 'timestamp'
+} as const
+
+export type TableStatusScalarFieldEnum = (typeof TableStatusScalarFieldEnum)[keyof typeof TableStatusScalarFieldEnum]
 
 
 export const SortOrder = {
