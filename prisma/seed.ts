@@ -27,26 +27,32 @@ const data = lines.map((line) => {
 });
 
 async function main() {
-  await prisma.$transaction(async (tx) => {
-    for (const member of data) {
-      const status = await tx.tableStatus.create({
-        data: {
-          status: "ABSENT",
-        },
-      });
-
-      await tx.member.create({
-        data: {
-          firstName: member.firstname,
-          lastName: member.lastname,
-          absent: 0,
-          late: 0,
-          present: 0,
-          statusId: status.id,
-        },
-      });
-    }
+  // 1️⃣ create all statuses
+  const statuses = await prisma.tableStatus.createMany({
+    data: data.map(() => ({ status: "ABSENT" })),
+    skipDuplicates: true,
   });
+
+  // 2️⃣ fetch their IDs
+  const allStatuses = await prisma.tableStatus.findMany({
+    where: {
+      /* filter to only new statuses if needed */
+    },
+  });
+
+  // 3️⃣ create members in batch
+  await prisma.member.createMany({
+    data: data.map((member, i) => ({
+      firstName: member.firstname,
+      lastName: member.lastname,
+      absent: 0,
+      late: 0,
+      present: 0,
+      statusId: allStatuses[i].id, // link status
+    })),
+    skipDuplicates: true,
+  });
+
   console.log("Done!");
 }
 main()
