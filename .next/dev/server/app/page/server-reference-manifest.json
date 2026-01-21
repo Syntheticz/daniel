@@ -1,0 +1,80 @@
+{
+  "node": {
+    "009b0128b7e890446249707aae392fe62e21a149ad": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/lib/action.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true,
+          "exportedName": "fetchMembers",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "exportedName": "fetchMembers",
+      "filename": "lib/action.ts"
+    },
+    "40760cef27c81c6158d83f56ae447a8500d69d020c": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/lib/action.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true,
+          "exportedName": "finalizeAttendance",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "exportedName": "finalizeAttendance",
+      "filename": "lib/action.ts"
+    },
+    "001dd40ba91307ff43c4d5726e304f8981214657d3": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/lib/action.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true,
+          "exportedName": "resetTable",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "exportedName": "resetTable",
+      "filename": "lib/action.ts"
+    },
+    "6041c7673d02793cd7adc90c2752eb54afd2c20dc7": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/lib/action.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true,
+          "exportedName": "updateTable",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "exportedName": "updateTable",
+      "filename": "lib/action.ts"
+    },
+    "40539d1515ba652f98ecbaac9cd46f87becbd658ac": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/lib/action.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true,
+          "exportedName": "createMember",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "exportedName": "createMember",
+      "filename": "lib/action.ts"
+    }
+  },
+  "edge": {}
+}

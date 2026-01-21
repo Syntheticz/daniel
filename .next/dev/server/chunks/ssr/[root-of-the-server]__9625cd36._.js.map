@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 17, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":""}},
+    {"offset": {"line": 21, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/philip/Documents/projects/2026/daniel/app/page.tsx"],"sourcesContent":["import AttendanceSystem from \"@/component/attendance-system\";\nimport Image from \"next/image\";\n\nexport default function Home() {\n  return (\n    <main>\n      <AttendanceSystem />\n    </main>\n  );\n}\n"],"names":[],"mappings":";;;;;AAAA;;;AAGe,SAAS;IACtB,qBACE,8OAAC;kBACC,cAAA,8OAAC,6IAAgB;;;;;;;;;;AAGvB"}}]
+}

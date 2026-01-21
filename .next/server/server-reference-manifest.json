@@ -1,0 +1,81 @@
+{
+  "node": {
+    "00a7898c6a060d99afefc9b07acd1bcf180ee2b38c": {
+      "workers": {
+        "app/page": {
+          "moduleId": 43673,
+          "async": true,
+          "exportedName": "fetchMembers",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "filename": "lib/action.ts",
+      "exportedName": "fetchMembers"
+    },
+    "40627af5c7cdfc54997d3fe472756363fa31202196": {
+      "workers": {
+        "app/page": {
+          "moduleId": 43673,
+          "async": true,
+          "exportedName": "finalizeAttendance",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "filename": "lib/action.ts",
+      "exportedName": "finalizeAttendance"
+    },
+    "00f809660701a0890265b2b7067f58d2e96f34002c": {
+      "workers": {
+        "app/page": {
+          "moduleId": 43673,
+          "async": true,
+          "exportedName": "resetTable",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "filename": "lib/action.ts",
+      "exportedName": "resetTable"
+    },
+    "607226d1e5266735b51d1aa08800c901cbe67d46a3": {
+      "workers": {
+        "app/page": {
+          "moduleId": 43673,
+          "async": true,
+          "exportedName": "updateTable",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "filename": "lib/action.ts",
+      "exportedName": "updateTable"
+    },
+    "400185b026e529eb8f9ad87bb208f55b7c3d92bc0f": {
+      "workers": {
+        "app/page": {
+          "moduleId": 43673,
+          "async": true,
+          "exportedName": "createMember",
+          "filename": "lib/action.ts"
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      },
+      "filename": "lib/action.ts",
+      "exportedName": "createMember"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "Z1DmAOcNJqv0j6ETu07trC3DFoWjbxWwJg8sHBVXx4c="
+}
