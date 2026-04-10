@@ -159,7 +159,7 @@ export default function AttendanceSystem() {
     });
   };
 
-  const handleFinalizeAttendance = () => {
+  const handleFinalizeAttendance = async () => {
     const finalized = attendees.map((attendee) => {
       const record = submittedRecords.get(attendee.id);
       return {
@@ -171,7 +171,37 @@ export default function AttendanceSystem() {
     });
 
     finalize(finalized);
-    alert("Attendance Finalized");
+
+    const date = new Date().toISOString().slice(0, 10);
+
+    // generate csv string from existing data
+    const headers = ["Name", "Status", "Date", "Time"];
+    const rows = attendees.map((attendee) => {
+      const record = submittedRecords.get(attendee.id);
+      const d = record ? new Date(record.submittedAt) : null;
+      return [
+        attendee.name,
+        record ? "Present" : "Absent",
+        d ? d.toLocaleDateString() : "-",
+        d ? d.toLocaleTimeString() : "-",
+      ];
+    });
+    const csv = [headers, ...rows].map((row) => row.join(",")).join("\n");
+
+    try {
+      const emailRes = await fetch("/api/attendance/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ csv, date }),
+      });
+
+      if (!emailRes.ok) throw new Error("Email failed");
+      alert("Attendance finalized and report sent!");
+    } catch (err) {
+      console.error(err);
+      alert("Attendance finalized but failed to send report.");
+    }
+
     handleDownloadSpreadsheet();
     handleReset();
   };
@@ -256,11 +286,11 @@ export default function AttendanceSystem() {
           </div>
         )}
         {filteredAttendees.map((attendee) => {
+          const member = members.find((m) => m.id === attendee.id);
           const isSubmitted = submittedRecords.has(attendee.id);
           const isSelected = selectedIds.has(attendee.id);
           const isChecked = isSubmitted || isSelected;
-          const record = submittedRecords.get(attendee.id);
-          const recordDate = record ? new Date(record.submittedAt) : null;
+
           return (
             <div
               key={attendee.id}
@@ -288,11 +318,14 @@ export default function AttendanceSystem() {
                 {attendee.name}
               </label>
               {isSubmitted ? (
-                <span className="shrink-0 text-sm font-medium text-green-700">
-                  {recordDate?.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                <span
+                  className={`shrink-0 text-sm font-semibold ${
+                    member?.status.status === "LATE"
+                      ? "text-yellow-600"
+                      : "text-green-700"
+                  }`}
+                >
+                  {member?.status.status === "LATE" ? "Late" : "Present"}
                 </span>
               ) : (
                 <input

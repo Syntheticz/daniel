@@ -1,21 +1,12 @@
 "use server";
 
-import { PrismaClient } from "@/src/generated/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "./prisma";
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
-
-const prisma = new PrismaClient({
-  adapter,
-});
-
-function isFourthSunday(date: Date): boolean {
-  if (date.getDay() !== 0) return false; // Sunday
+function isThirdSunday(date: Date): boolean {
+  if (date.getDay() !== 0) return false;
 
   const dayOfMonth = date.getDate();
-  return dayOfMonth >= 22 && dayOfMonth <= 28;
+  return dayOfMonth >= 15 && dayOfMonth <= 21;
 }
 
 type AttendanceStatus = "Present" | "Late" | "Absent";
@@ -38,7 +29,7 @@ function getAttendanceStatus(submittedAt?: string | null): AttendanceStatus {
   if (day === 0) {
     cutoff = new Date(date);
 
-    if (isFourthSunday(date)) {
+    if (isThirdSunday(date)) {
       cutoff.setHours(10, 0, 0, 0); // 4th Sunday
     } else {
       cutoff.setHours(9, 0, 0, 0); // regular Sunday
@@ -99,10 +90,12 @@ export async function updateTable(id: string, timestamp: string) {
     },
   });
 
+  const status = getAttendanceStatus(timestamp); // "Present" | "Late" | "Absent"
+
   await prisma.tableStatus.update({
     where: { id: tableStatus.id },
     data: {
-      status: "PRESENT",
+      status: status === "Late" ? "LATE" : "PRESENT",
       timestamp: timestamp,
     },
   });
