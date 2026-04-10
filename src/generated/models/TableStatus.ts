@@ -144,7 +144,7 @@ export type TableStatusGroupByOutputType = {
   _max: TableStatusMaxAggregateOutputType | null
 }
 
-type GetTableStatusGroupByPayload<T extends TableStatusGroupByArgs> = Prisma.PrismaPromise<
+export type GetTableStatusGroupByPayload<T extends TableStatusGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<TableStatusGroupByOutputType, T['by']> &
       {
@@ -997,6 +997,11 @@ export type TableStatusFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` TableStatuses.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of TableStatuses.
+   */
   distinct?: Prisma.TableStatusScalarFieldEnum | Prisma.TableStatusScalarFieldEnum[]
 }
 

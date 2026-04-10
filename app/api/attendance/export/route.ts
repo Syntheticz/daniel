@@ -1,7 +1,15 @@
 // app/api/attendance/export/route.ts
 import { NextResponse } from "next/server";
 import ExcelJS from "exceljs";
-import { prisma } from "@/lib/prisma";
+import { PrismaClient } from "@/src/generated/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+const prisma = new PrismaClient({
+  adapter,
+});
 
 export async function GET() {
   const members = await prisma.member.findMany({

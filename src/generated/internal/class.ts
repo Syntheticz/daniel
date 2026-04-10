@@ -17,18 +17,26 @@ import type * as Prisma from "./prismaNamespace"
 
 const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
-  "clientVersion": "7.2.0",
-  "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
+  "clientVersion": "7.6.0",
+  "engineVersion": "75cbdc1eb7150937890ad5465d861175c6624711",
   "activeProvider": "postgresql",
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Member {\n  id        String @id @default(cuid())\n  firstName String\n  lastName  String\n  present   Int\n  absent    Int\n  late      Int\n\n  timestamp AttendanceTimestamp[]\n\n  statusId String      @unique\n  status   TableStatus @relation(fields: [statusId], references: [id])\n\n  @@unique([firstName, lastName])\n}\n\nmodel AttendanceTimestamp {\n  id   String   @id @default(cuid())\n  date DateTime\n\n  member   Member? @relation(fields: [memberId], references: [id])\n  memberId String?\n}\n\nmodel TableStatus {\n  id        String    @id @default(cuid())\n  status    String    @default(\"ABSENT\")\n  timestamp DateTime?\n\n  members Member?\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
     "types": {}
+  },
+  "parameterizationSchema": {
+    "strings": [],
+    "graph": ""
   }
 }
 
 config.runtimeDataModel = JSON.parse("{\"models\":{\"Member\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"present\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"absent\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"late\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timestamp\",\"kind\":\"object\",\"type\":\"AttendanceTimestamp\",\"relationName\":\"AttendanceTimestampToMember\"},{\"name\":\"statusId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"object\",\"type\":\"TableStatus\",\"relationName\":\"MemberToTableStatus\"}],\"dbName\":null},\"AttendanceTimestamp\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"member\",\"kind\":\"object\",\"type\":\"Member\",\"relationName\":\"AttendanceTimestampToMember\"},{\"name\":\"memberId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"TableStatus\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"members\",\"kind\":\"object\",\"type\":\"Member\",\"relationName\":\"MemberToTableStatus\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.parameterizationSchema = {
+  strings: JSON.parse("[\"where\",\"orderBy\",\"cursor\",\"member\",\"timestamp\",\"members\",\"status\",\"_count\",\"Member.findUnique\",\"Member.findUniqueOrThrow\",\"Member.findFirst\",\"Member.findFirstOrThrow\",\"Member.findMany\",\"data\",\"Member.createOne\",\"Member.createMany\",\"Member.createManyAndReturn\",\"Member.updateOne\",\"Member.updateMany\",\"Member.updateManyAndReturn\",\"create\",\"update\",\"Member.upsertOne\",\"Member.deleteOne\",\"Member.deleteMany\",\"having\",\"_avg\",\"_sum\",\"_min\",\"_max\",\"Member.groupBy\",\"Member.aggregate\",\"AttendanceTimestamp.findUnique\",\"AttendanceTimestamp.findUniqueOrThrow\",\"AttendanceTimestamp.findFirst\",\"AttendanceTimestamp.findFirstOrThrow\",\"AttendanceTimestamp.findMany\",\"AttendanceTimestamp.createOne\",\"AttendanceTimestamp.createMany\",\"AttendanceTimestamp.createManyAndReturn\",\"AttendanceTimestamp.updateOne\",\"AttendanceTimestamp.updateMany\",\"AttendanceTimestamp.updateManyAndReturn\",\"AttendanceTimestamp.upsertOne\",\"AttendanceTimestamp.deleteOne\",\"AttendanceTimestamp.deleteMany\",\"AttendanceTimestamp.groupBy\",\"AttendanceTimestamp.aggregate\",\"TableStatus.findUnique\",\"TableStatus.findUniqueOrThrow\",\"TableStatus.findFirst\",\"TableStatus.findFirstOrThrow\",\"TableStatus.findMany\",\"TableStatus.createOne\",\"TableStatus.createMany\",\"TableStatus.createManyAndReturn\",\"TableStatus.updateOne\",\"TableStatus.updateMany\",\"TableStatus.updateManyAndReturn\",\"TableStatus.upsertOne\",\"TableStatus.deleteOne\",\"TableStatus.deleteMany\",\"TableStatus.groupBy\",\"TableStatus.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"contains\",\"startsWith\",\"endsWith\",\"date\",\"memberId\",\"firstName\",\"lastName\",\"present\",\"absent\",\"late\",\"statusId\",\"every\",\"some\",\"none\",\"firstName_lastName\",\"is\",\"isNot\",\"connectOrCreate\",\"upsert\",\"disconnect\",\"delete\",\"connect\",\"createMany\",\"set\",\"updateMany\",\"deleteMany\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
+  graph: "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_ACBDAQB2ACFRAQB2ACFSAQB2ACFTAgB-ACFUAgB-ACFVAgB-ACEFYwIAAAABZgIAAAABZwIAAAABaAIAAAABaQIAAAABCxQAAIABADAVAACFAQAwXQAAgQEAMF4AAIIBADBfAACEAQAwYAAAhAEAMGEAAIQBADBiAACDAQAgYwAAhAEAMGQAAIYBADBlAACHAQAwAkMBAAAAAU9AAAAAAQIAAAAFACAUAACMAQAgAwAAAAUAIBQAAIwBACAVAACLAQAgAQ0AAKkBADAHAwAAXgAgQAAAbgAwQQAAAwAQQgAAbgAwQwEAAAABT0AAbwAhUAEAcAAhAgAAAAUAIA0AAIsBACACAAAAiAEAIA0AAIkBACAGQAAAhwEAMEEAAIgBABBCAACHAQAwQwEAXAAhT0AAbwAhUAEAcAAhBkAAAIcBADBBAACIAQAQQgAAhwEAMEMBAFwAIU9AAG8AIVABAHAAIQJDAQB2ACFPQACKAQAhAWNAAAAAAQJDAQB2ACFPQACKAQAhAkMBAAAAAU9AAAAAAQQUAACAAQAwXQAAgQEAMGEAAIQBADBiAACDAQAgAxQAAHkAIF0AAHoAIGEAAAEAIAIEAACdAQAgBgAAngEAIAAAAAFjAQAAAAEHFAAApAEAIBUAAKcBACBdAAClAQAgXgAApgEAIF8AAAcAIGAAAAcAIGEAAAEAIAMUAACkAQAgXQAApQEAIGEAAAEAIAAAAAAABRQAAJ8BACAVAACiAQAgXQAAoAEAIF4AAKEBACBhAAA5ACADFAAAnwEAIF0AAKABACBhAAA5ACAAAgQAAHIAIAUAAI8BACADBEAAAAABBgEAAAABQwEAAAABAgAAADkAIBQAAJ8BACADAAAAPAAgFAAAnwEAIBUAAKMBACAFAAAAPAAgBEAAdwAhBgEAdgAhDQAAowEAIEMBAHYAIQMEQAB3ACEGAQB2ACFDAQB2ACEIBgAAnAEAIEMBAAAAAVEBAAAAAVIBAAAAAVMCAAAAAVQCAAAAAVUCAAAAAVYBAAAAAQIAAAABACAUAACkAQAgAwAAAAcAIBQAAKQBACAVAACoAQAgCgAAAAcAIAYAAJsBACANAACoAQAgQwEAdgAhUQEAdgAhUgEAdgAhUwIAfgAhVAIAfgAhVQIAfgAhVgEAdgAhCAYAAJsBACBDAQB2ACFRAQB2ACFSAQB2ACFTAgB-ACFUAgB-ACFVAgB-ACFWAQB2ACECQwEAAAABT0AAAAABAwQGAgYAAwcABAEDCAEBBQkBAQQKAAABBgADAQYAAwUHAAkaAAobAAscAAwdAA0AAAAAAAUHAAkaAAobAAscAAwdAA0BAysBAQMxAQMHABIcABMdABQAAAADBwASHAATHQAUAAADBwAZHAAaHQAbAAAAAwcAGRwAGh0AGwgCAQkLAQoNAQsOAQwPAQ4RAQ8TBRAUBhEWARIYBRMZBxYaARcbARgcBR4fCB8gDiAhAiEiAiIjAiMkAiQlAiUnAiYpBScqDygtAikvBSowECsyAiwzAi00BS43ES84FTA6AzE7AzI-AzM_AzRAAzVCAzZEBTdFFjhHAzlJBTpKFztLAzxMAz1NBT5QGD9RHA"
+}
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -37,12 +45,14 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.postgresql.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.postgresql.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.mjs")
     return await decodeBase64AsWasm(wasm)
-  }
+  },
+
+  importName: "./query_compiler_fast_bg.js"
 }
 
 
@@ -57,7 +67,9 @@ export interface PrismaClientConstructor {
    * Type-safe database client for TypeScript
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more Members
    * const members = await prisma.member.findMany()
    * ```
@@ -79,7 +91,9 @@ export interface PrismaClientConstructor {
  * Type-safe database client for TypeScript
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more Members
  * const members = await prisma.member.findMany()
  * ```
@@ -164,7 +178,7 @@ export interface PrismaClient<
    * ])
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
+   * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
   $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): runtime.Types.Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 

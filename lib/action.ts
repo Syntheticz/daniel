@@ -1,6 +1,14 @@
 "use server";
 
-import { prisma } from "./prisma";
+import { PrismaClient } from "@/src/generated/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+const prisma = new PrismaClient({
+  adapter,
+});
 
 function isThirdSunday(date: Date): boolean {
   if (date.getDay() !== 0) return false;

@@ -144,7 +144,7 @@ export type AttendanceTimestampGroupByOutputType = {
   _max: AttendanceTimestampMaxAggregateOutputType | null
 }
 
-type GetAttendanceTimestampGroupByPayload<T extends AttendanceTimestampGroupByArgs> = Prisma.PrismaPromise<
+export type GetAttendanceTimestampGroupByPayload<T extends AttendanceTimestampGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AttendanceTimestampGroupByOutputType, T['by']> &
       {
@@ -1060,6 +1060,11 @@ export type AttendanceTimestampFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` AttendanceTimestamps.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of AttendanceTimestamps.
+   */
   distinct?: Prisma.AttendanceTimestampScalarFieldEnum | Prisma.AttendanceTimestampScalarFieldEnum[]
 }
 
