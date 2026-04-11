@@ -158,7 +158,6 @@ export default function AttendanceSystem() {
       return newMap;
     });
   };
-  console.log(members);
 
   const handleFinalizeAttendance = async () => {
     const finalized = attendees.map((attendee) => {
