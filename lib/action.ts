@@ -91,19 +91,31 @@ export async function resetTable() {
   });
 }
 
-export async function updateTable(id: string, timestamp: string) {
+export async function updateTable(
+  id: string,
+  timestamp: string,
+  statusOverride?: "present" | "late",
+) {
   const tableStatus = await prisma.tableStatus.findFirstOrThrow({
     where: {
       members: { id },
     },
   });
 
-  const status = getAttendanceStatus(timestamp); // "Present" | "Late" | "Absent"
+  const derivedStatus = getAttendanceStatus(timestamp); // fallback if no override
+  const finalStatus =
+    statusOverride === "late"
+      ? "LATE"
+      : statusOverride === "present"
+        ? "PRESENT"
+        : derivedStatus === "Late"
+          ? "LATE"
+          : "PRESENT";
 
   await prisma.tableStatus.update({
     where: { id: tableStatus.id },
     data: {
-      status: status === "Late" ? "LATE" : "PRESENT",
+      status: finalStatus,
       timestamp: timestamp,
     },
   });
@@ -128,8 +140,9 @@ export async function finalizeAttendance(
       await prisma.member.update({
         where: { id: member.id },
         data: {
-          present: status === "Present" ? { increment: 1 } : undefined,
-          late: status === "Late" ? { increment: 1 } : undefined,
+          present:
+            status.toLowerCase() === "present" ? { increment: 1 } : undefined,
+          late: status.toLowerCase() === "late" ? { increment: 1 } : undefined,
         },
       });
     } else {

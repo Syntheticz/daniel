@@ -158,6 +158,7 @@ export default function AttendanceSystem() {
       return newMap;
     });
   };
+  console.log(members);
 
   const handleFinalizeAttendance = async () => {
     const finalized = attendees.map((attendee) => {
@@ -171,7 +172,6 @@ export default function AttendanceSystem() {
     });
 
     finalize(finalized);
-
     const date = new Date().toISOString().slice(0, 10);
 
     // generate csv string from existing data
@@ -208,38 +208,35 @@ export default function AttendanceSystem() {
 
   const handleSubmit = async () => {
     const now = new Date();
-    const updates: { id: string; submittedAt: string }[] = [];
+    const updates: {
+      id: string;
+      submittedAt: string;
+      statusOverride?: string;
+    }[] = [];
 
     for (const id of selectedIds) {
-      const customTime = customTimes.get(id);
+      const dropdownValue = customTimes.get(id); // "present" | "late" | ""
 
-      let submittedAt = now;
-
-      if (customTime) {
-        const [hours, minutes] = customTime.split(":").map(Number);
-        submittedAt = new Date();
-        submittedAt.setHours(hours, minutes, 0, 0);
-      }
-
-      // ✅ async call OUTSIDE setState
-      await updateTable(id, submittedAt.toISOString());
+      await updateTable(
+        id,
+        now.toISOString(),
+        (dropdownValue as "present" | "late") || "present",
+      );
 
       updates.push({
         id,
-        submittedAt: submittedAt.toISOString(),
+        submittedAt: now.toISOString(),
+        statusOverride: dropdownValue,
       });
     }
 
-    // ✅ synchronous state update
     setSubmittedRecords((prev) => {
       const newMap = new Map(prev);
-
       for (const record of updates) {
         if (!newMap.has(record.id)) {
           newMap.set(record.id, record);
         }
       }
-
       return newMap;
     });
 
@@ -258,7 +255,6 @@ export default function AttendanceSystem() {
   };
 
   const hasPendingSelections = selectedIds.size > 0;
-
   if (!isLoaded) {
     return (
       <div className="w-full h-screen flex justify-center items-center">
@@ -328,14 +324,17 @@ export default function AttendanceSystem() {
                   {member?.status.status === "LATE" ? "Late" : "Present"}
                 </span>
               ) : (
-                <input
-                  type="time"
+                <select
                   value={customTimes.get(attendee.id) || ""}
                   onChange={(e) =>
                     handleTimeChange(attendee.id, e.target.value)
                   }
-                  className="h-10 w-[5.5rem] shrink-0 rounded-md border border-border bg-background px-2 text-base"
-                />
+                  className="h-10 w-[6rem] shrink-0 rounded-md border border-border bg-background px-2 text-base"
+                >
+                  <option value="">—</option>
+                  <option value="present">Present</option>
+                  <option value="late">Late</option>
+                </select>
               )}
             </div>
           );
