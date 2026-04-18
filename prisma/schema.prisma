@@ -30,8 +30,9 @@ model Member {
 }
 
 model AttendanceTimestamp {
-  id   String   @id @default(cuid())
-  date DateTime
+  id     String   @id @default(cuid())
+  date   DateTime
+  status String   @default("PRESENT")
 
   member   Member? @relation(fields: [memberId], references: [id])
   memberId String?

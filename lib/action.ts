@@ -103,6 +103,7 @@ export async function updateTable(
   });
 
   const derivedStatus = getAttendanceStatus(timestamp); // fallback if no override
+
   const finalStatus =
     statusOverride === "late"
       ? "LATE"
@@ -112,7 +113,7 @@ export async function updateTable(
           ? "LATE"
           : "PRESENT";
 
-  await prisma.tableStatus.update({
+  const update = await prisma.tableStatus.update({
     where: { id: tableStatus.id },
     data: {
       status: finalStatus,
@@ -132,7 +133,11 @@ export async function finalizeAttendance(
   for (const member of data) {
     if (member.submittedAt) {
       await prisma.attendanceTimestamp.create({
-        data: { memberId: member.id, date: member.submittedAt },
+        data: {
+          memberId: member.id,
+          date: member.submittedAt,
+          status: member.status,
+        },
       });
 
       const status = getAttendanceStatus(member.submittedAt);

@@ -111,7 +111,10 @@ export default function AttendanceSystem() {
       const newMap = new Map(prev);
 
       for (const member of members) {
-        if (member.status.status === "PRESENT") {
+        if (
+          member.status.status === "PRESENT" ||
+          member.status.status === "LATE"
+        ) {
           newMap.set(member.id, {
             id: member.id,
             submittedAt: member.status.timestamp?.toISOString() || "",

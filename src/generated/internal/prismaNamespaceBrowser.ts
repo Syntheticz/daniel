@@ -88,6 +88,7 @@ export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof 
 export const AttendanceTimestampScalarFieldEnum = {
   id: 'id',
   date: 'date',
+  status: 'status',
   memberId: 'memberId'
 } as const
 
